@@ -59,15 +59,27 @@ class Button:
 
 
 
-#################
-# VISUALIZATION #
-#################
+#########
+# ARRAY #
+#########
 
 
 
-class show:
+class Array:
 
-    def array(arr):
+    def __init__(self):
+        self.array = [ i for i in range(1,101) ]
+        self.speed = 0
+    
+    def shuffle(self): 
+        random.shuffle(self.array)
+        array.show(array.array)
+
+    def reset(self): 
+        self.array = [ i for i in range(1, 101) ]
+        array.show(array.array)
+    
+    def show(self, arr):
 
         rect = pygame.Rect(0, 240, 1000, 600)
         pygame.draw.rect(display, color.white, rect)
@@ -79,28 +91,7 @@ class show:
             pygame.draw.rect(display, color.red, rect)
         
         pygame.display.update()
-        time.sleep(speed)
-
-
-
-#########
-# ARRAY #
-#########
-
-
-
-class Array:
-
-    def __init__(self):
-        self.array = [ i for i in range(1,101) ]
-    
-    def shuffle(self): 
-        random.shuffle(self.array)
-        show.array(array.array)
-
-    def reset(self): 
-        self.array = [ i for i in range(1, 101) ]
-        show.array(array.array)
+        time.sleep(self.speed)
 
 
 
@@ -117,7 +108,7 @@ class Algorithms:
     def bubbleSort(arr):
 
         Algorithms.running = True
-
+        array.speed = 0.005
         n = len(arr)
         
         swapped = False
@@ -129,7 +120,7 @@ class Algorithms:
                 if arr[j] > arr[j + 1]:
                     swapped = True
                     arr[j], arr[j + 1] = arr[j + 1], arr[j]
-                    show.array(arr)
+                    array.show(arr)
         
             if not swapped:
                 array.array = arr
@@ -142,6 +133,7 @@ class Algorithms:
     
     def insertionSort(arr):
         
+        array.speed = 0.005
         Algorithms.running = True
 
         for i in range(1, len(arr)):
@@ -152,11 +144,11 @@ class Algorithms:
 
             while j >= 0 and arr[j] > key_item:
                 arr[j + 1] = arr[j]
-                show.array(arr)
+                array.show(arr)
                 j -= 1
 
             arr[j + 1] = key_item
-            show.array(arr)
+            array.show(arr)
 
         array.array = arr
         Algorithms.running = False
@@ -164,6 +156,7 @@ class Algorithms:
     
     def heapSort(arr):
 
+        array.speed = 0.01
         Algorithms.running = True
 
         n = len(arr)
@@ -174,25 +167,28 @@ class Algorithms:
  
         for i in range(n - 1, 0, -1):
             arr[i], arr[0] = arr[0], arr[i]
-            show.array(arr)
+            array.show(arr)
             functions.heapify(arr, i, 0)
 
         array.array = arr
         Algorithms.running = False
     
 
-    def quickSort(array, low, high):
+    def quickSort(arr, low, high):
 
+        array.speed = 0.01
         Algorithms.running = True
   
         if low < high:
 
-            pi = functions.partition(array, low, high)
+            pi = functions.partition(arr, low, high)
             
-            Algorithms.quickSort(array, low, pi - 1)
-            Algorithms.quickSort(array, pi + 1, high)
+            Algorithms.quickSort(arr, low, pi - 1)
+            Algorithms.quickSort(arr, pi + 1, high)
         
-        Algorithms.running = False
+        if arr == array.array:
+            Algorithms.running = False
+            return
 
 
 
@@ -205,43 +201,43 @@ class Algorithms:
 class functions:
 
     
-    def heapify(array, n, i):
+    def heapify(arr, n, i):
         largest = i  
         l = 2 * i + 1 
         r = 2 * i + 2 
      
-        if l < n and array[i] < array[l]:
+        if l < n and arr[i] < arr[l]:
             largest = l
     
-        if r < n and array[largest] < array[r]:
+        if r < n and arr[largest] < arr[r]:
             largest = r
     
         if largest != i:
-            array[i], array[largest] = array[largest], array[i]
-            show.array(array)
-            functions.heapify(array, n, largest)
+            arr[i], arr[largest] = arr[largest], arr[i]
+            array.show(arr)
+            functions.heapify(arr, n, largest)
 
     
-    def partition(array, low, high):
+    def partition(arr, low, high):
 
   
-        pivot = array[high]
+        pivot = arr[high]
 
         
         i = low - 1
 
         
         for j in range(low, high):
-            if array[j] <= pivot:
+            if arr[j] <= pivot:
             
                 i = i + 1
 
                 
-                array[i], array[j] = array[j], array[i]
-                show.array(array)
+                arr[i], arr[j] = arr[j], arr[i]
+                array.show(arr)
         
-        array[i + 1], array[high] = array[high], array[i + 1]
-        show.array(array)
+        arr[i + 1], arr[high] = arr[high], arr[i + 1]
+        array.show(arr)
         
         return i + 1
 
@@ -293,13 +289,13 @@ def mainloop():
 
     while True:
 
+        if Algorithms.running: continue
+
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            
-            if Algorithms.running: return
             
             if event.type == pygame.MOUSEBUTTONDOWN:
 
@@ -315,12 +311,11 @@ def mainloop():
 
 pygame.init()
 display = pygame.display.set_mode((1000, 840))
-pygame.display.set_caption('Algorithm Visualizer')
+pygame.display.set_caption('Sorting Algorithms')
 display.fill(color.white)
 pygame.draw.rect( display , color.grey , (0,0,1000,80) )
 
 array = Array()
-speed = 0.01
 
 reset = Button( 10, 20, 155, 40, color.white, 'Reset' )
 shuffle = Button( 175, 20, 155, 40, color.white, 'Shuffle' )
@@ -329,9 +324,10 @@ heapSort = Button( 505 , 20, 155, 40, color.white, 'Heap Sort' )
 insertionSort = Button( 670 , 20, 155, 40, color.white, 'Insertion Sort' )
 quickSort = Button( 835 , 20, 155, 40, color.white, 'Quick Sort' )
 
-show.array(array.array)
+array.show(array.array)
 pygame.display.update()
 
 
 mainloop()
         
+
