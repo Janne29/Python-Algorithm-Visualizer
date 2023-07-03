@@ -74,10 +74,6 @@ class Array:
     def shuffle(self): 
         random.shuffle(self.array)
         array.show(array.array)
-
-    def reset(self): 
-        self.array = [ i for i in range(1, 101) ]
-        array.show(array.array)
     
     def show(self, arr):
 
@@ -104,6 +100,22 @@ class Array:
 class Algorithms:
 
     running = False
+
+    def mergeSort(arr, low, high):
+
+        array.speed = 0.01
+
+        if low < high:
+    
+            m = low + ( high - low) // 2
+
+            Algorithms.mergeSort(arr, low, m)
+            Algorithms.mergeSort(arr, m + 1, high)
+            functions.merge(arr, low, m, high)
+
+        array.show(arr)
+        array.array = arr
+        Algorithms.running = False
 
     def bubbleSort(arr):
 
@@ -176,7 +188,7 @@ class Algorithms:
 
     def quickSort(arr, low, high):
 
-        array.speed = 0.01
+        array.speed = 0.02
         Algorithms.running = True
   
         if low < high:
@@ -199,6 +211,48 @@ class Algorithms:
 
 
 class functions:
+
+
+    def merge(arr, low, mid, high):
+
+        n1 = mid - low + 1
+        n2 = high - mid
+    
+        L = [0] * (n1)
+        R = [0] * (n2)
+    
+        for i in range(0, n1):
+            L[i] = arr[low + i]
+    
+        for j in range(0, n2):
+            R[j] = arr[mid + 1 + j]
+    
+        i = 0     
+        j = 0    
+        k = low     
+    
+        while i < n1 and j < n2:
+            if L[i] <= R[j]:
+                arr[k] = L[i]
+                array.show(arr)
+                i += 1
+            else:
+                arr[k] = R[j]
+                array.show(arr)
+                j += 1
+            k += 1
+    
+        while i < n1:
+            arr[k] = L[i]
+            array.show(arr)
+            i += 1
+            k += 1
+    
+        while j < n2:
+            arr[k] = R[j]
+            array.show(arr)
+            j += 1
+            k += 1
 
     
     def heapify(arr, n, i):
@@ -253,12 +307,12 @@ def click(pos):
 
     x, y = pos[0], pos[1]
 
-    if reset.clicked(x,y):
-        array.reset()
-        return
-
     if shuffle.clicked(x,y):
         array.shuffle()
+        return
+
+    if mergeSort.clicked(x,y):
+        Algorithms.mergeSort(array.array, 0, 99)
         return
 
     if bubbleSort.clicked(x,y):
@@ -317,8 +371,8 @@ pygame.draw.rect( display , color.grey , (0,0,1000,80) )
 
 array = Array()
 
-reset = Button( 10, 20, 155, 40, color.white, 'Reset' )
-shuffle = Button( 175, 20, 155, 40, color.white, 'Shuffle' )
+shuffle = Button( 10, 20, 155, 40, color.white, 'Shuffle' )
+mergeSort = Button( 175, 20, 155, 40, color.white, 'Merge Sort' )
 bubbleSort = Button( 340, 20, 155, 40, color.white, 'Bubble Sort' )
 heapSort = Button( 505 , 20, 155, 40, color.white, 'Heap Sort' )
 insertionSort = Button( 670 , 20, 155, 40, color.white, 'Insertion Sort' )
@@ -329,5 +383,3 @@ pygame.display.update()
 
 
 mainloop()
-        
-
