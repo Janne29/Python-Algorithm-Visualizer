@@ -218,7 +218,7 @@ class Algorithms:
         Algorithms.running = False
     
 
-    def bogoSort(arr):
+    def bogoSearch(arr):
 
         array.speed = 0.2
         Algorithms.running = True
@@ -274,7 +274,7 @@ def click(pos):
         return
     
     if bogoSearch.clicked(x,y):
-        Algorithms.bogoSort(array.array)
+        Algorithms.bogoSearch(array.array)
         return
 
 
